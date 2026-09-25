@@ -29,6 +29,11 @@ a { color: var(--glacier); }
 .tabs a { color: var(--mist); text-decoration: none; font-weight: 600; font-size: 13px; padding: 7px 12px; border-radius: 6px; }
 .tabs a:hover { color: var(--ice); background: rgba(255,255,255,.06); }
 .tabs a.on { color: var(--night); background: var(--ice); }
+.tabs a.tab-load { color: #06121e; background: var(--glacier); }
+.tabs a.tab-load:hover { background: #a6d7ff; color: #06121e; }
+.tabs a.tab-load.on { background: var(--ice); }
+.load-cta { display: block; margin-top: 12px; text-align: center; font: 600 13px var(--ui); color: #06121e; background: var(--glacier); border-radius: 6px; padding: 8px 10px; text-decoration: none; }
+.load-cta:hover { background: #a6d7ff; }
 
 .btn { font: 600 12px var(--ui); background: rgba(255,255,255,.08); color: var(--ice); border: 1px solid var(--line); border-radius: 6px; padding: 5px 10px; cursor: pointer; }
 .btn:hover { background: rgba(255,255,255,.16); }

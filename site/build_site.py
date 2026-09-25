@@ -103,12 +103,15 @@ scoped += """
 #analysis { color-scheme: light; background: var(--paper); color: var(--ink); min-height: calc(100vh - var(--barH)); }
 #analysis .controls { top: calc(env(safe-area-inset-top, 0px) + var(--barH)); }
 #analysis a { color: var(--accent); }
+#analysis a.load-btn { display: inline-block; font: 600 12.5px var(--sans); color: #fff; background: var(--accent); border-radius: 4px; padding: 5px 10px; text-decoration: none; }
 """
 open(os.path.join(DIST, 'css/analysis.css'), 'w').write(scoped)
 
 # ---- page
 app_html = open(os.path.join(ROOT, 'app/index.html')).read()
 body = app_html[app_html.index('<header class="masthead">'):app_html.index('</main>') + len('</main>')]
+body = body.replace('<button class="ghost" id="btn-fullwin" title="Use full overlap">Full</button>\n  </div>',
+                    '<button class="ghost" id="btn-fullwin" title="Use full overlap">Full</button>\n  </div>\n  <div class="ctl"><label>Your own record</label><a href="#compare" data-tab="compare" class="load-btn">⤒ Load your data</a></div>', 1)
 body += '\n<div id="tooltip" class="tooltip" role="status"></div>\n'
 shell = open(os.path.join(SRC, 'shell.html')).read()
 page = shell.replace('<!--ANALYSIS-->', body).replace('<!--COMPARE-->', open(os.path.join(SRC, 'compare.html')).read())
