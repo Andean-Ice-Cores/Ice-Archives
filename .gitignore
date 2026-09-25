@@ -1,0 +1,10 @@
+# raw NOAA downloads (~2 GB) — re-create with pipeline/fetch_data.sh
+data/raw/
+# build intermediates
+site/dist/
+blender/out/*.blend1
+tests/js_out.json
+tests/py_expected.json
+__pycache__/
+.DS_Store
+.claude/

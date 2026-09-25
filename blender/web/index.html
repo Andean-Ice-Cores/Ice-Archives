@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Andes ENSO 3D</title>
+<style>
+  :root { --bg: #0e1116; --panel: rgba(18, 22, 30, .86); --ink: #e9edf2; --ink2: #9aa4b2; --rule: rgba(255,255,255,.12);
+          --oni: #CC79A7; --roni: #009E73; --en: #D55E00; --ln: #0072B2; --acc: #7cc4ff;
+          --sans: "Helvetica Neue", Helvetica, Arial, sans-serif; }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; height: 100%; background: var(--bg); color: var(--ink); font: 13px/1.45 var(--sans); overflow: hidden; }
+  #stage { position: fixed; inset: 0; }
+  #labels { position: fixed; inset: 0; pointer-events: none; }
+  .lbl-site { font: 700 13px var(--sans); color: #fff; text-shadow: 0 1px 3px #000, 0 0 8px #000; }
+  .lbl-core { font: 600 10.5px var(--sans); color: #cfd6df; background: rgba(0,0,0,.45); padding: 0 4px; border-radius: 3px; }
+  .lbl-core.sel { color: #fff; background: var(--acc); color: #06121e; }
+  .lbl-other { font: italic 11px var(--sans); color: #8e98a6; text-shadow: 0 1px 2px #000; }
+  .panel { position: fixed; background: var(--panel); border: 1px solid var(--rule); border-radius: 10px; backdrop-filter: blur(6px); }
+  #left { top: 14px; left: 14px; width: 330px; padding: 14px 16px; max-height: calc(100% - 28px); overflow: auto; }
+  #right { top: 14px; right: 14px; width: 340px; padding: 14px 16px; max-height: calc(100% - 28px); overflow: auto; }
+  h1 { font-size: 17px; margin: 0 0 2px; line-height: 1.25; }
+  .sub { color: var(--ink2); margin: 0 0 10px; font-size: 12px; }
+  .lab { font-size: 10px; letter-spacing: .09em; text-transform: uppercase; color: var(--ink2); font-weight: 700; margin: 12px 0 5px; }
+  .seg { display: flex; border: 1px solid var(--rule); border-radius: 6px; overflow: hidden; }
+  .seg button { flex: 1; font: 600 12px var(--sans); background: transparent; color: var(--ink2); border: 0; padding: 6px 4px; cursor: pointer; }
+  .seg button + button { border-left: 1px solid var(--rule); }
+  .seg button.on { background: var(--ink); color: #0e1116; }
+  .row { display: flex; gap: 8px; align-items: center; }
+  input[type=range] { flex: 1; accent-color: var(--acc); }
+  button.btn { font: 600 12px var(--sans); background: rgba(255,255,255,.08); color: var(--ink); border: 1px solid var(--rule); border-radius: 6px; padding: 5px 9px; cursor: pointer; }
+  button.btn:hover { background: rgba(255,255,255,.16); }
+  #year { font: 700 30px var(--sans); letter-spacing: -.01em; }
+  #yearNote { color: var(--ink2); font-size: 11.5px; }
+  .cbar { height: 10px; border-radius: 3px; margin-top: 4px; }
+  .ticks { display: flex; justify-content: space-between; color: var(--ink2); font-size: 10.5px; }
+  .key { color: var(--ink2); font-size: 11.5px; margin-top: 6px; }
+  .key b { color: var(--ink); }
+  .sw { display: inline-block; width: 10px; height: 10px; border-radius: 50%; vertical-align: -1px; margin-right: 3px; }
+  #story { margin-top: 10px; border-top: 1px solid var(--rule); padding-top: 10px; font-size: 12.5px; }
+  #story p { margin: 0 0 6px; }
+  table.st { width: 100%; border-collapse: collapse; font-variant-numeric: tabular-nums; margin-top: 6px; }
+  table.st td, table.st th { white-space: nowrap; padding: 3px 4px; border-bottom: 1px solid var(--rule); text-align: right; }
+  table.st td:first-child, table.st th:first-child { text-align: left; color: var(--ink2); font-weight: 400; }
+  .muted { color: var(--ink2); font-size: 11.5px; }
+  #tip { position: fixed; pointer-events: none; background: rgba(0,0,0,.85); color: #fff; padding: 5px 8px; border-radius: 5px; font-size: 12px; opacity: 0; z-index: 9; }
+  #loading { position: fixed; inset: 0; display: grid; place-items: center; color: var(--ink2); font-size: 14px; }
+  a { color: var(--acc); }
+  #bottom { left: 50%; transform: translateX(-50%); bottom: 14px; padding: 8px 10px; display: flex; gap: 6px; flex-wrap: wrap; justify-content: center; }
+  @media (max-width: 900px) {
+    #left { width: auto; right: 14px; max-height: 42%; }
+    #right { top: auto; bottom: 64px; left: 14px; right: 14px; width: auto; max-height: 30%; }
+    #bottom { bottom: 8px; }
+  }
+</style>
+</head>
+<body>
+<div id="stage"></div>
+<div id="labels"></div>
+<div id="loading">Loading Blender scene…</div>
+
+<div id="left" class="panel">
+  <h1>ENSO coupling of Andean ice cores</h1>
+  <p class="sub">ONI vs RONI · 3-D scene built in Blender from NOAA NCEI ice cores, NOAA CPC indices and ERSST.v6</p>
+
+  <div class="lab">Period</div>
+  <div class="seg" id="period"><button data-v="full">Full period (1950–)</button><button data-v="run">Running 21-yr</button></div>
+  <div id="runBox" style="margin-top:8px">
+    <div class="row"><span id="year">1930</span><span id="yearNote"></span></div>
+    <div class="row"><button class="btn" id="play">▶ Play</button><input type="range" id="yr" min="1861" max="2015" step="1" value="1930"></div>
+  </div>
+
+  <div class="lab">Show</div>
+  <div class="seg" id="show"><button data-v="both">ONI + RONI</button><button data-v="ONI">ONI</button><button data-v="RONI">RONI</button><button data-v="delta">ΔR</button></div>
+
+  <div class="lab" id="cbarLab">Pearson r (proxy vs DJF index)</div>
+  <div class="cbar" id="cbar"></div>
+  <div class="ticks" id="cticks"><span>−0.7</span><span>0</span><span>+0.7</span></div>
+  <div class="key" id="key"></div>
+
+  <div id="story"></div>
+</div>
+
+<div id="right" class="panel"><div id="card"><div class="muted">Click a column (or a core label) to open its record.</div></div></div>
+
+<div id="bottom" class="panel">
+  <button class="btn" data-cam="overview">Overview</button>
+  <button class="btn" data-cam="huascaran">Huascarán</button>
+  <button class="btn" data-cam="south">Quelccaya · Illimani</button>
+  <button class="btn" data-cam="wall">Time wall</button>
+  <button class="btn" id="rotate">Auto-rotate</button>
+  <button class="btn" id="shot">PNG</button>
+</div>
+<div id="tip"></div>
+
+<script src="vendor/three.min.js"></script>
+<script src="vendor/GLTFLoader.js"></script>
+<script src="vendor/OrbitControls.js"></script>
+<script src="vendor/CSS2DRenderer.js"></script>
+<script src="scene_data.js"></script>
+<script src="viewer.js"></script>
+</body>
+</html>

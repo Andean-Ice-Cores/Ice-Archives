@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Andean Ice Cores and ENSO</title>
+<link rel="stylesheet" href="css/style.css?v=7">
+</head>
+<body>
+<header class="masthead">
+  <div class="kicker">Interactive figure · Short Communication</div>
+  <h1>Does removing tropical-mean warming change the ENSO signal in Andean ice cores?</h1>
+  <p class="dek">δ<sup>18</sup>O, accumulation, dust and major ions from NOAA NCEI Andean ice cores compared with the
+    Oceanic Niño Index (ONI) and NOAA’s Relative Oceanic Niño Index (RONI). All statistics are recomputed live in your browser.</p>
+  <div class="defs">
+    <div><b>ONI</b> = 3-month running mean of Niño-3.4 (5°N–5°S, 170°–120°W) SST anomaly; ERSST.v6, centred 30-yr base periods updated every 5 yr.</div>
+    <div><b>RONI</b> = 3-month running mean of [Niño-3.4 anomaly − 20°S–20°N mean SST anomaly], rescaled to the variance of Niño-3.4 (CPC, adopted Feb 2026).</div>
+    <div><b>Hypothesis</b> — Andean δ<sup>18</sup>O partly records tropical-mean tropospheric temperature and moisture transport; if so, coupling should weaken under RONI.</div>
+  </div>
+</header>
+
+<nav class="controls" id="controls" aria-label="Analysis controls">
+  <div class="ctl">
+    <label>Index</label>
+    <div class="seg" id="ctl-mode">
+      <button data-v="ONI">ONI</button><button data-v="RONI">RONI</button><button data-v="SPLIT">Split</button>
+    </div>
+  </div>
+  <div class="ctl">
+    <label for="ctl-source">ENSO source</label>
+    <select id="ctl-source">
+      <option value="cpc">NOAA CPC official (1950–)</option>
+      <option value="ersst">ERSST.v6, same algorithm (1850–)</option>
+      <option value="lmr">LMRv2.1 multi-proxy reconstruction (1–2000 CE, ensemble)</option>
+    </select>
+  </div>
+  <div class="ctl">
+    <label for="ctl-core">Core</label>
+    <select id="ctl-core"></select>
+  </div>
+  <div class="ctl">
+    <label for="ctl-var">Proxy</label>
+    <select id="ctl-var">
+      <option value="d18O">δ18O</option><option value="accum">Accumulation</option>
+      <option value="dust">Dust</option><option value="ions">Major ions</option><option value="dexcess">d-excess</option>
+    </select>
+    <select id="ctl-ion" title="Ion species"></select>
+  </div>
+  <div class="ctl">
+    <label for="ctl-season">ENSO season</label>
+    <select id="ctl-season">
+      <option value="djf">DJF (wet-season peak)</option>
+      <option value="hydro">Hydrological year (Aug–Jul)</option>
+      <option value="ann">Calendar year (Jan–Dec)</option>
+      <option value="custom">Custom window…</option>
+    </select>
+    <span id="custom-win" class="inline">
+      <select id="ctl-cm0" aria-label="Custom window start month"></select>–<select id="ctl-cm1" aria-label="Custom window end month"></select>
+    </span>
+  </div>
+  <div class="ctl">
+    <label for="ctl-lag">Lag <span id="lag-val" class="val"></span></label>
+    <input type="range" id="ctl-lag" min="-2" max="2" step="1" value="0">
+  </div>
+  <div class="ctl">
+    <label>Detrend</label>
+    <div class="seg" id="ctl-detrend"><button data-v="0">Off</button><button data-v="1">On</button></div>
+  </div>
+  <div class="ctl">
+    <label>Window (CE)</label>
+    <span class="inline"><input type="number" id="ctl-y0" step="1"> – <input type="number" id="ctl-y1" step="1"></span>
+    <button class="ghost" id="btn-fullwin" title="Use full overlap">Full</button>
+  </div>
+  <div class="ctl">
+    <label for="ctl-thr">Event threshold <span id="thr-val" class="val"></span></label>
+    <input type="range" id="ctl-thr" min="0.5" max="1.5" step="0.25" value="0.5">
+  </div>
+</nav>
+
+<main class="grid">
+  <section class="panel span2" id="panel-a">
+    <div class="ph"><h2><span class="letter">a</span> Andean core sites coloured by correlation with the selected index</h2><div class="ex" data-target="fig-a"></div></div>
+    <div id="fig-a" class="fig"></div>
+    <p class="note" id="note-a"></p>
+  </section>
+
+  <section class="panel span2" id="panel-b">
+    <div class="ph"><h2><span class="letter">b</span> <span id="title-b">Proxy vs. ENSO indices</span></h2><div class="ex" data-target="fig-b"></div></div>
+    <div id="fig-b" class="fig"></div>
+    <div id="core-card" class="core-card"></div>
+  </section>
+
+  <section class="panel" id="panel-c">
+    <div class="ph"><h2><span class="letter">c</span> Correlation statistics</h2><div class="ex" data-target="fig-c"></div></div>
+    <div id="stats-table"></div>
+    <div id="fig-c" class="fig"></div>
+  </section>
+
+  <section class="panel" id="panel-d">
+    <div class="ph"><h2><span class="letter">d</span> Composite proxy anomalies by ENSO phase</h2><div class="ex" data-target="fig-d"></div></div>
+    <div id="fig-d" class="fig"></div>
+    <p class="note" id="note-d"></p>
+  </section>
+
+  <section class="panel span2" id="panel-e">
+    <div class="ph"><h2><span class="letter">e</span> What changed? ONI → RONI</h2><div class="ex" data-target="fig-e"></div></div>
+    <div class="two">
+      <div><div id="fig-e" class="fig"></div></div>
+      <div>
+        <div id="why-e" class="prose"></div>
+        <div id="reclass-e"></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="panel span2" id="panel-f">
+    <div class="ph"><h2><span class="letter">f</span> Running correlation: how coupling evolves through time</h2>
+      <div class="ph-ctl"><label for="ctl-runw">Window <span id="runw-val" class="val"></span></label>
+        <input type="range" id="ctl-runw" min="11" max="31" step="2" value="21"></div>
+      <div class="ex" data-target="fig-f"></div></div>
+    <div id="fig-f" class="fig"></div>
+    <p class="note" id="note-f"></p>
+  </section>
+
+  <section class="panel" id="panel-g">
+    <div class="ph"><h2><span class="letter">g</span> Hypothesis test: ENSO-relative vs. tropical-mean signal</h2><div class="ex" data-target="fig-g"></div></div>
+    <div id="fig-g" class="fig"></div>
+    <p class="note" id="note-g"></p>
+  </section>
+
+  <section class="panel" id="panel-h">
+    <div class="ph"><h2><span class="letter">h</span> Age-model uncertainty (layer-counting errors)</h2>
+      <div class="ph-ctl"><label for="ctl-theta">Miscount rate <span id="theta-val" class="val"></span></label>
+        <input type="range" id="ctl-theta" min="0" max="0.05" step="0.005" value="0.01"></div>
+      <div class="ex" data-target="fig-h"></div></div>
+    <div id="fig-h" class="fig"></div>
+    <p class="note" id="note-h"></p>
+  </section>
+
+  <section class="panel span2 interp" id="panel-i">
+    <div class="ph"><h2>What the current settings show</h2></div>
+    <div id="interp" class="prose"></div>
+  </section>
+
+  <section class="panel span2" id="panel-cap">
+    <div class="ph"><h2>Draft figure caption <span class="val" id="cap-count"></span></h2>
+      <button class="ghost" id="btn-copycap">Copy</button></div>
+    <p id="caption" class="caption"></p>
+  </section>
+
+  <section class="panel span2 methods" id="panel-m">
+    <details>
+      <summary>Methods, data provenance and verification</summary>
+      <div id="methods" class="prose"></div>
+    </details>
+  </section>
+</main>
+<div id="tooltip" class="tooltip" role="status"></div>
+<footer class="foot">Data: NOAA NCEI Paleoclimatology · NOAA CPC · NOAA ERSST.v6 · LMRv2.1. Built <span id="built"></span>.</footer>
+
+<script src="vendor/d3.min.js"></script>
+<script src="data/dataset.js?v=7"></script>
+<script src="js/stats.js?v=7"></script>
+<script src="js/app.js?v=7"></script>
+</body>
+</html>

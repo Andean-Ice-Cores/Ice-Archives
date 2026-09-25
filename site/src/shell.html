@@ -1,0 +1,150 @@
+<title>Andean Ice-Core ENSO Explorer</title>
+<meta name="description" content="Interactive 3-D and statistical explorer of ENSO coupling in Andean ice cores under ONI and RONI.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;600&family=IBM+Plex+Sans:wght@400;500;600;700&family=Source+Serif+4:opsz,wght@8..60,400;8..60,600&display=swap">
+<link rel="stylesheet" href="css/site.css?v=1">
+<link rel="stylesheet" href="css/explore.css?v=1">
+<link rel="stylesheet" href="css/analysis.css?v=1">
+
+<header class="bar">
+  <a class="brand" href="#explore" data-tab="explore">
+    <span class="brand-core" aria-hidden="true"></span>
+    <span><b>Andean Ice-Core ENSO Explorer</b><span class="brand-sub">ONI vs RONI · NOAA NCEI cores</span></span>
+  </a>
+  <nav class="tabs" aria-label="Sections">
+    <a href="#explore" data-tab="explore">Explore in 3-D</a>
+    <a href="#analysis" data-tab="analysis">Analysis</a>
+    <a href="#about" data-tab="about">About &amp; data</a>
+  </nav>
+</header>
+
+<!-- ============================================================ 3-D -->
+<section id="explore" class="tab">
+  <div id="v3stage" class="v3stage">
+    <div id="stage"></div>
+    <div id="labels"></div>
+    <div id="loading">Loading the Blender scene (7 MB)…</div>
+
+    <div id="left" class="v3panel">
+      <h1>Does removing tropical warming change the ENSO signal in Andean ice?</h1>
+      <p class="sub">Each core is a pair of columns: <b class="c-oni">ONI</b> and <b class="c-roni">RONI</b>. Scrub through time and watch whether they part ways.</p>
+
+      <div class="lab">Period</div>
+      <div class="seg" id="period"><button data-v="full">Full period (1950–)</button><button data-v="run">Running 21-yr</button></div>
+      <div id="runBox" style="margin-top:8px">
+        <div class="row"><span id="year">1930</span><span id="yearNote"></span></div>
+        <div class="row"><button class="btn" id="play">▶ Play</button><input type="range" id="yr" min="1861" max="2015" step="1" value="1930" aria-label="Centre year of the running window"></div>
+      </div>
+
+      <div class="lab">Show</div>
+      <div class="seg" id="show"><button data-v="both">ONI + RONI</button><button data-v="ONI">ONI</button><button data-v="RONI">RONI</button><button data-v="delta">ΔR</button></div>
+
+      <div class="lab" id="cbarLab">Pearson r (proxy vs DJF index)</div>
+      <div class="cbar" id="cbar"></div>
+      <div class="ticks" id="cticks"><span>−0.7</span><span>0</span><span>+0.7</span></div>
+      <div class="key" id="key"></div>
+      <div id="story"></div>
+    </div>
+
+    <div id="right" class="v3panel"><div id="card"><div class="muted">Click a column or a core label to open its record.</div></div></div>
+
+    <div id="bottom" class="v3panel">
+      <button class="btn" data-cam="overview">Overview</button>
+      <button class="btn" data-cam="huascaran">Huascarán</button>
+      <button class="btn" data-cam="south">Quelccaya · Illimani</button>
+      <button class="btn" data-cam="wall">Time wall</button>
+      <button class="btn" id="rotate">Auto-rotate</button>
+      <button class="btn" id="shot">Snapshot</button>
+    </div>
+    <div id="tip"></div>
+  </div>
+
+  <div class="findings">
+    <div class="finding">
+      <div class="fig-num">r ≈ 0.6</div>
+      <p><b>Huascarán, Illimani and the Quelccaya firn core</b> track DJF ENSO strongly since 1960 (p &lt; 0.05 after correcting for autocorrelation).</p>
+    </div>
+    <div class="finding">
+      <div class="fig-num">ΔR ≤ 0.03</div>
+      <p><b>Switching ONI → RONI barely matters.</b> No core changes significantly; the δ¹⁸O signal follows the ENSO-specific SST pattern, not tropical-mean warmth.</p>
+    </div>
+    <div class="finding">
+      <div class="fig-num">1920s</div>
+      <p><b>Quelccaya's coupling broke down</b> after strong 1870–1920 coupling, under both indices. Press ▶ Play to watch it happen.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================ 2-D -->
+<section id="analysis" class="tab" hidden>
+<!--ANALYSIS-->
+</section>
+
+<!-- ============================================================ about -->
+<section id="about" class="tab" hidden>
+  <div class="about">
+    <div class="about-main">
+      <h2>What you are looking at</h2>
+      <p>NOAA’s Climate Prediction Center adopted the <b>Relative Oceanic Niño Index (RONI)</b> in February 2026. RONI is the Niño-3.4 SST anomaly minus the 20°S–20°N mean SST anomaly, rescaled to Niño-3.4 variance. It removes the background tropical warming that the classic <b>ONI</b> carries. Andean ice-core δ¹⁸O partly reflects tropical-mean tropospheric temperature and moisture transport. If so, its ENSO coupling should weaken under RONI. This site tests that idea with every annually resolved Andean core in the NOAA NCEI archive.</p>
+
+      <h2>Blender renders</h2>
+      <video src="media/running.mp4" controls muted playsinline poster="media/hero_full.png"></video>
+      <p class="cap">21-yr running correlations, 1861–2015 (ERSST.v6 DJF ONI/RONI recomputed with CPC’s algorithm). Column height = |r|, colour = r; the disc marks p = 0.05.</p>
+
+      <h2>Draft figure caption</h2>
+      <blockquote class="caption-q"><b>Figure 1 | Andean ice-core δ¹⁸O–ENSO coupling is largely insensitive to removing tropical-mean warming.</b> <b>a</b>, NOAA NCEI Andean ice cores with annual resolution (circles; fill, Pearson <i>r</i> with DJF ONI, 1960–2019; heavy outline, <i>p</i> &lt; 0.05 after effective-sample-size correction) and drill sites lacking annual archives (triangles); inset, elevation versus latitude. <b>b</b>, Huascarán Col δ¹⁸O (black, z-score) with DJF ONI (purple) and RONI (green); shading, El Niño (orange) and La Niña (blue) years. <b>c</b>, Correlation statistics. <b>d</b>, El Niño minus La Niña composites (95% CI). <b>e</b>, ΔR = <i>r</i>(RONI) − <i>r</i>(ONI) per core (Meng–Rosenthal–Rubin test) and reclassified events. <b>f</b>, 21-yr running correlation for Quelccaya δ¹⁸O using ERSST.v6-derived indices (dashed, 1851–2000) and 100 LMRv2.1 reconstruction members (shading, 5–95%). <b>g</b>, Standardized regression on ENSO-relative and tropical-mean SST. <b>h</b>, Correlation spread under 1% yr⁻¹ layer-counting error. RONI subtracts the 20°S–20°N mean SST anomaly from Niño-3.4, rescaled to Niño-3.4 variance.</blockquote>
+    </div>
+
+    <aside class="about-side">
+      <h3>Records</h3>
+      <table class="rec">
+        <tr><th>Core</th><th>Proxy</th><th>Years</th></tr>
+        <tr><td>Quelccaya Summit Dome</td><td>δ¹⁸O, accum., dust, 9 ions</td><td>226–2009</td></tr>
+        <tr><td>Quelccaya firn 2018</td><td>δ¹⁸O, 7 ions</td><td>2004–2018</td></tr>
+        <tr><td>Huascarán Col / Summit</td><td>δ¹⁸O, d-excess, accum., dust</td><td>1960–2019</td></tr>
+        <tr><td>Huascarán 1993 core 2</td><td>δ¹⁸O, particles, NO₃⁻</td><td>1894–1993</td></tr>
+        <tr><td>Illimani 1999</td><td>NH₄⁺</td><td>1800–1998</td></tr>
+        <tr><td>Illimani firn 2017</td><td>δ¹⁸O, 7 ions</td><td>2000–2017</td></tr>
+      </table>
+      <p class="note-s">Sajama (only 5-m / 100-yr means), Coropuna, Hualcán and Chimborazo have no annual record in the NCEI ice-core archive; they are shown as triangles.</p>
+
+      <h3>Verification</h3>
+      <ul class="checks">
+        <li>RONI recomputed from ERSST.v6 matches CPC: <span class="mono">r = 0.9994, RMSE 0.03 °C</span></li>
+        <li>Statistics match SciPy on 24 quantities <span class="mono">(&lt;10⁻⁶)</span></li>
+        <li>Independent Python pipeline reproduces the app’s numbers exactly for 4 configurations</li>
+        <li>LMRv2.1 reconstruction skill vs instrumental: <span class="mono">r = 0.87 (ONI), 0.83 (RONI)</span></li>
+      </ul>
+
+      <h3>Sources</h3>
+      <ul class="src">
+        <li><a href="https://www.ncei.noaa.gov/access/paleo-search/?dataTypeId=7" target="_blank" rel="noopener">NOAA NCEI Paleoclimatology, ice cores</a></li>
+        <li><a href="https://www.cpc.ncep.noaa.gov/products/analysis_monitoring/enso/roni/" target="_blank" rel="noopener">NOAA CPC: RONI</a> · <a href="https://www.cpc.ncep.noaa.gov/products/analysis_monitoring/enso/oni/v6/" target="_blank" rel="noopener">ONI v6</a></li>
+        <li><a href="https://psl.noaa.gov/data/gridded/data.noaa.ersst.v5.html" target="_blank" rel="noopener">NOAA ERSST (PSL)</a></li>
+        <li><a href="https://www.ncei.noaa.gov/pub/data/paleo/reconstructions/tardif2019lmr/v2_1/" target="_blank" rel="noopener">LMRv2.1 (Tardif et al. 2019)</a></li>
+      </ul>
+      <p class="note-s">Caveat: Quelccaya δ¹⁸O is part of the PAGES2k network assimilated by LMRv2.1, so LMR-based correlations for that core are not independent.</p>
+    </aside>
+  </div>
+</section>
+
+<!-- export panel (the sandbox blocks direct downloads) -->
+<div id="xport" class="xport" hidden>
+  <div class="xport-box" role="dialog" aria-modal="true" aria-labelledby="xport-title">
+    <div class="xport-head"><b id="xport-title">Export</b><button class="btn" id="xport-close">Close</button></div>
+    <p class="xport-hint" id="xport-hint"></p>
+    <div id="xport-body"></div>
+  </div>
+</div>
+
+<script src="vendor/d3.min.js"></script>
+<script src="vendor/three.min.js"></script>
+<script src="vendor/GLTFLoader.js"></script>
+<script src="vendor/OrbitControls.js"></script>
+<script src="vendor/CSS2DRenderer.js"></script>
+<script src="js/shell.js?v=1"></script>
+<script src="data/dataset.js?v=1"></script>
+<script src="js/stats.js?v=1"></script>
+<script src="js/app.js?v=1"></script>
+<script src="data/scene_data.js?v=1"></script>
+<script src="js/viewer.js?v=1"></script>

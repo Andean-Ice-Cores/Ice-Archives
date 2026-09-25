@@ -1,0 +1,45 @@
+/* 3-D explorer, scoped to #explore */
+#explore .v3stage { position: relative; height: calc(100vh - var(--barH)); min-height: 620px; overflow: hidden; background: var(--night); }
+#explore #stage, #explore #labels { position: absolute; inset: 0; }
+#explore #labels { pointer-events: none; }
+#explore #stage canvas { display: block; touch-action: none; }
+#explore .lbl-site { font: 700 13px var(--ui); color: #fff; text-shadow: 0 1px 3px #000, 0 0 8px #000; }
+#explore .lbl-core { font: 600 10.5px var(--mono); color: #cfd6df; background: rgba(0,0,0,.5); padding: 0 4px; border-radius: 3px; }
+#explore .lbl-core.sel { background: var(--glacier); color: #06121e; }
+#explore .lbl-other { font: italic 11px var(--ui); color: #8e98a6; text-shadow: 0 1px 2px #000; }
+#explore .v3panel { position: absolute; background: rgba(19, 26, 35, .88); border: 1px solid var(--line); border-radius: 10px; backdrop-filter: blur(6px); }
+#explore #left { top: 14px; left: 14px; width: 330px; padding: 14px 16px; max-height: calc(100% - 90px); overflow: auto; }
+#explore #right { top: 14px; right: 14px; width: 340px; padding: 14px 16px; max-height: calc(100% - 90px); overflow: auto; }
+#explore #bottom { left: 50%; transform: translateX(-50%); bottom: 14px; padding: 8px 10px; display: flex; gap: 6px; flex-wrap: wrap; justify-content: center; width: max-content; max-width: calc(100% - 28px); }
+#explore h1 { font: 600 17px/1.25 var(--ui); margin: 0 0 4px; text-wrap: balance; }
+#explore .sub { color: var(--mist); margin: 0 0 8px; font-size: 12.5px; }
+#explore .c-oni { color: var(--oni); } #explore .c-roni { color: var(--roni); }
+#explore .lab { font-size: 10px; letter-spacing: .1em; text-transform: uppercase; color: var(--mist); font-weight: 700; margin: 12px 0 5px; }
+#explore .seg { display: flex; border: 1px solid var(--line); border-radius: 6px; overflow: hidden; }
+#explore .seg button { flex: 1; font: 600 12px var(--ui); background: transparent; color: var(--mist); border: 0; padding: 6px 4px; cursor: pointer; }
+#explore .seg button + button { border-left: 1px solid var(--line); }
+#explore .seg button.on { background: var(--ice); color: var(--night); }
+#explore .row { display: flex; gap: 8px; align-items: center; }
+#explore input[type=range] { flex: 1; accent-color: var(--glacier); min-width: 0; }
+#explore #year { font: 600 30px var(--mono); letter-spacing: -.02em; }
+#explore #yearNote { color: var(--mist); font-size: 11.5px; }
+#explore .cbar { height: 10px; border-radius: 3px; margin-top: 4px; }
+#explore .ticks { display: flex; justify-content: space-between; color: var(--mist); font: 10.5px var(--mono); }
+#explore .key { color: var(--mist); font-size: 11.5px; margin-top: 6px; }
+#explore .key b { color: var(--ice); }
+#explore .sw { display: inline-block; width: 10px; height: 10px; border-radius: 50%; vertical-align: -1px; margin-right: 3px; }
+#explore #story { margin-top: 10px; border-top: 1px solid var(--line); padding-top: 10px; font-size: 12.5px; }
+#explore #story p { margin: 0 0 6px; }
+#explore table.st { width: 100%; border-collapse: collapse; font-variant-numeric: tabular-nums; margin-top: 6px; }
+#explore table.st td, #explore table.st th { white-space: nowrap; padding: 3px 4px; border-bottom: 1px solid var(--line); text-align: right; }
+#explore table.st td:first-child, #explore table.st th:first-child { text-align: left; color: var(--mist); font-weight: 400; }
+#explore .muted { color: var(--mist); font-size: 11.5px; }
+#explore #tip { position: fixed; pointer-events: none; background: rgba(0,0,0,.85); color: #fff; padding: 5px 8px; border-radius: 5px; font-size: 12px; opacity: 0; z-index: 30; }
+#explore #loading { position: absolute; inset: 0; display: grid; place-items: center; color: var(--mist); font-size: 14px; }
+@media (max-width: 900px) {
+  #explore .v3stage { height: auto; min-height: 0; display: flex; flex-direction: column; }
+  #explore #stage, #explore #labels { position: absolute; top: 0; left: 0; right: 0; height: 62vh; inset: auto; }
+  #explore .v3spacer { height: 62vh; flex: none; }
+  #explore #left, #explore #right, #explore #bottom { position: static; width: auto; max-height: none; transform: none; margin: 10px 16px 0; }
+  #explore #bottom { order: -1; margin-top: calc(62vh + 10px); }
+}
