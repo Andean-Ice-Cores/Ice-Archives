@@ -26,6 +26,8 @@ cp('blender/out/hero_full.png', 'media/hero_full.png')
 shutil.copy(os.path.join(SRC, 'shell.js'), os.path.join(DIST, 'js/shell.js'))
 shutil.copy(os.path.join(SRC, 'site.css'), os.path.join(DIST, 'css/site.css'))
 shutil.copy(os.path.join(SRC, 'explore.css'), os.path.join(DIST, 'css/explore.css'))
+shutil.copy(os.path.join(SRC, 'compare.css'), os.path.join(DIST, 'css/compare.css'))
+shutil.copy(os.path.join(SRC, 'compare.js'), os.path.join(DIST, 'js/compare.js'))
 
 
 def patch(s, old, new, count=1):
@@ -109,7 +111,7 @@ app_html = open(os.path.join(ROOT, 'app/index.html')).read()
 body = app_html[app_html.index('<header class="masthead">'):app_html.index('</main>') + len('</main>')]
 body += '\n<div id="tooltip" class="tooltip" role="status"></div>\n'
 shell = open(os.path.join(SRC, 'shell.html')).read()
-page = shell.replace('<!--ANALYSIS-->', body)
+page = shell.replace('<!--ANALYSIS-->', body).replace('<!--COMPARE-->', open(os.path.join(SRC, 'compare.html')).read())
 open(os.path.join(DIST, 'index.html'), 'w').write(page)          # fragment for claude.ai (host adds the skeleton)
 # standalone copy for GitHub Pages: python3 site/build_site.py --pages docs
 import sys

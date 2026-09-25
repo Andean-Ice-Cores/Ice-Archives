@@ -1,7 +1,7 @@
 /* Site shell: tab routing (bare #hash tokens) and the export panel that replaces file downloads. */
 (function () {
   'use strict';
-  const TABS = ['explore', 'analysis', 'about'];
+  const TABS = ['explore', 'analysis', 'compare', 'about'];
   const listeners = [];
   window.Site = {
     current: 'explore',

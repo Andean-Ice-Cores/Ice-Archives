@@ -7,7 +7,11 @@ relative to the classic **ONI**.
 ## Website
 
 **https://andean-ice-cores.github.io/Ice-Archives/** — the 3-D explorer (Blender scene), the full analysis figure and
-the data/methods notes in one site. It is built from this repository into `docs/` (served by GitHub Pages):
+the data/methods notes in one site, plus a **Your data** tab: load your own annual, monthly or sub-annual series
+(CSV/TSV/NOAA template, decimal years, ISO dates or years BP; processed only in the browser) and correlate it with
+ONI/RONI (CPC 1950–, ERSST.v6 1850–, LMRv2.1 1–2000 CE with ensemble uncertainty), tropical-mean SST and every NCEI
+Andean ice-core series — N_eff p-values, ΔR (MRR) test, lag scan, running correlation, composites and a screen of all
+historical series with false-discovery-rate control. It is built from this repository into `docs/` (served by GitHub Pages):
 `python3 site/build_site.py --pages docs`.
 
 ## Open it locally

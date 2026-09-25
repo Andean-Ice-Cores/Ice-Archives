@@ -1,0 +1,99 @@
+<section id="compare" class="tab" hidden>
+  <div class="cmp">
+    <header class="cmp-head">
+      <div class="cmp-kicker">Your data</div>
+      <h2>Compare your own record with ENSO and the Andean ice cores</h2>
+      <p class="cmp-dek">Load any annual, monthly or sub-annual time series: an ice or firn core, a lake record, a tree-ring chronology, station precipitation or river discharge. It is correlated with ONI and RONI (1850–present, or 1–2000 CE from the LMRv2.1 reconstruction), tropical-mean SST, and every NOAA NCEI Andean ice-core series, using the same statistics as the Analysis tab. <b>Your file is read in this browser tab and never uploaded.</b></p>
+    </header>
+
+    <div class="cmp-grid">
+      <!-- load -->
+      <section class="card" id="cmp-load">
+        <h3>1 · Load a series</h3>
+        <label id="cmp-drop" class="drop" for="cmp-file">
+          <input type="file" id="cmp-file" accept=".csv,.tsv,.txt,.dat,text/csv,text/plain">
+          <b>Drop a file here</b> or <u>choose a file</u>
+          <span class="small">CSV, TSV or NOAA template .txt · lines starting with # are ignored · first row may be a header</span>
+        </label>
+        <details class="paste">
+          <summary>…or paste values</summary>
+          <textarea id="cmp-paste" rows="6" placeholder="year,value&#10;1950,-17.2&#10;1951,-16.8&#10;…"></textarea>
+          <button class="pbtn" id="cmp-paste-go">Use pasted values</button>
+        </details>
+        <div class="ex-row"><span class="small">Or try an example:</span> <span id="cmp-examples"></span></div>
+        <div class="small file-name">Loaded: <span id="cmp-file-name">—</span></div>
+      </section>
+
+      <!-- map columns -->
+      <section class="card" id="cmp-map">
+        <h3>2 · Check the columns</h3>
+        <div class="fields">
+          <label>Year / date column<select id="cmp-ycol"></select></label>
+          <label>Month column (optional)<select id="cmp-mcol"></select></label>
+          <label>Value column<select id="cmp-vcol"></select></label>
+          <label class="chk"><input type="checkbox" id="cmp-bp"> Ages are years BP (1950)</label>
+          <label>Missing-value codes<input type="text" id="cmp-missing" value="-999"></label>
+          <label>Sub-annual → annual<select id="cmp-agg"><option value="hydro">Aug–Jul (wet-season year)</option><option value="cal">Jan–Dec</option></select></label>
+          <label>Series name<input type="text" id="cmp-label"></label>
+          <label>Units<input type="text" id="cmp-units" placeholder="e.g. ‰, mm, m w.e."></label>
+        </div>
+        <div id="cmp-preview"></div>
+        <p id="cmp-msg" class="msg"></p>
+      </section>
+    </div>
+
+    <div id="cmp-results">
+      <!-- analysis controls -->
+      <div class="cmp-ctl">
+        <label>ENSO source<select id="cmp-source"><option value="cpc">NOAA CPC official (1950–)</option><option value="ersst">ERSST.v6, CPC algorithm (1850–)</option><option value="lmr">LMRv2.1 reconstruction (1–2000 CE)</option></select></label>
+        <label>ENSO season<select id="cmp-season"><option value="djf">DJF (wet-season peak)</option><option value="hydro">Aug–Jul</option><option value="ann">Jan–Dec</option><option value="custom">Custom…</option></select>
+          <span id="cmp-custom" hidden><select id="cmp-cm0" aria-label="Start month"></select>–<select id="cmp-cm1" aria-label="End month"></select></span></label>
+        <label>Lag <b id="cmp-lag-v">0 yr</b><input type="range" id="cmp-lag" min="-5" max="5" step="1" value="0"></label>
+        <label class="chk"><input type="checkbox" id="cmp-detrend"> Detrend both series</label>
+        <label>Window (CE)<span class="inl"><input type="number" id="cmp-y0"> – <input type="number" id="cmp-y1"></span></label>
+        <label>Running window <b id="cmp-runw-v">21 yr</b><input type="range" id="cmp-runw" min="11" max="51" step="2" value="21"></label>
+        <button class="pbtn" id="cmp-csv">Aligned data (CSV)</button>
+      </div>
+
+      <div class="cmp-panels">
+        <section class="card wide">
+          <div class="card-h"><h3>ENSO coupling of your series: ONI vs RONI</h3><span class="xb"><button data-cmp-export="cmp-enso-fig" data-kind="svg">SVG</button><button data-cmp-export="cmp-enso-fig" data-kind="png">PNG</button></span></div>
+          <div class="two-col">
+            <div id="cmp-enso-table"></div>
+            <div id="cmp-interp" class="interp-txt"></div>
+          </div>
+          <div id="cmp-enso-fig" class="figbox"></div>
+        </section>
+
+        <section class="card">
+          <div class="card-h"><h3>Lag correlation (−5 … +5 yr)</h3><span class="xb"><button data-cmp-export="cmp-lag-fig" data-kind="svg">SVG</button><button data-cmp-export="cmp-lag-fig" data-kind="png">PNG</button></span></div>
+          <div id="cmp-lag-fig" class="figbox"></div>
+          <p class="small" id="cmp-lag-note"></p>
+        </section>
+
+        <section class="card">
+          <div class="card-h"><h3>El Niño / La Niña composites</h3><span class="xb"><button data-cmp-export="cmp-comp-fig" data-kind="svg">SVG</button><button data-cmp-export="cmp-comp-fig" data-kind="png">PNG</button></span></div>
+          <div id="cmp-comp-fig" class="figbox"></div>
+        </section>
+
+        <section class="card wide">
+          <div class="card-h"><h3>Running correlation with ONI and RONI</h3><span class="xb"><button data-cmp-export="cmp-run-fig" data-kind="svg">SVG</button><button data-cmp-export="cmp-run-fig" data-kind="png">PNG</button></span></div>
+          <div id="cmp-run-fig" class="figbox"></div>
+        </section>
+
+        <section class="card wide">
+          <div class="card-h"><h3>Screen against every historical series</h3></div>
+          <div id="cmp-screen"></div>
+        </section>
+
+        <section class="card wide" id="cmp-target-card">
+          <div class="card-h"><h3>Detailed comparison</h3><span class="xb"><button data-cmp-export="cmp-tgt-fig" data-kind="svg">SVG</button><button data-cmp-export="cmp-tgt-fig" data-kind="png">PNG</button></span></div>
+          <label class="tgt">Historical series<select id="cmp-target"></select></label>
+          <div id="cmp-tgt-fig" class="figbox"></div>
+          <p class="small" id="cmp-tgt-stats"></p>
+        </section>
+      </div>
+    </div>
+  </div>
+  <div id="cmp-tip" class="cmp-tip" role="status"></div>
+</section>
